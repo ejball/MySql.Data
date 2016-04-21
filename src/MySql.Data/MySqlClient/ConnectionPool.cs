@@ -1,10 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MySql.Data.Serialization;
 
 namespace MySql.Data.MySqlClient
 {
 	internal sealed class ConnectionPool
 	{
+		public string ConnectionString { get; }
+
+		public string Server { get; set; }
+
+		public int Port { get; set; }
+
+		public string UserID { get; }
+
+		public string Password { get; }
+
+		public string Database { get; }
+
+		public bool ConnectionReset { get; }
+
+		public bool AllowUserVariables { get; }
+
+		public bool ConvertZeroDateTime { get; }
+
+		public bool OldGuids { get; }
+
 		public MySqlSession TryGetSession()
 		{
 			lock (m_lock)
@@ -27,19 +48,15 @@ namespace MySql.Data.MySqlClient
 			}
 		}
 
-		public static ConnectionPool GetPool(MySqlConnectionStringBuilder csb)
+		public static ConnectionPool GetPool(string connectionString)
 		{
-			if (!csb.Pooling)
-				return null;
-
-			string key = csb.ConnectionString;
 			lock (s_lock)
 			{
 				ConnectionPool pool;
-				if (!s_pools.TryGetValue(key, out pool))
+				if (!s_pools.TryGetValue(connectionString, out pool))
 				{
-					pool = new ConnectionPool((int) csb.MinimumPoolSize, (int) csb.MaximumPoolSize);
-					s_pools.Add(key, pool);
+					pool = new ConnectionPool(connectionString);
+					s_pools.Add(connectionString, pool);
 				}
 				return pool;
 			}
@@ -55,12 +72,35 @@ namespace MySql.Data.MySqlClient
 				pool.Clear();
 		}
 
-		private ConnectionPool(int minimumSize, int maximumSize)
+		private ConnectionPool(string connectionString)
 		{
+			var csb = new MySqlConnectionStringBuilder(connectionString);
+
+			if (csb.UseCompression)
+				throw new NotSupportedException("Compression not supported.");
+
 			m_lock = new object();
 			m_sessions = new Queue<MySqlSession>();
-			m_minimumSize = minimumSize;
-			m_maximumSize = maximumSize;
+			m_maximumSize = csb.Pooling ? (int) csb.MaximumPoolSize : 0;
+
+			Server = csb.Server;
+			Port = (int) csb.Port;
+			UserID = csb.UserID;
+			Password = csb.Password;
+			Database = csb.Database;
+			ConnectionReset = csb.ConnectionReset;
+			AllowUserVariables = csb.AllowUserVariables;
+			ConvertZeroDateTime = csb.ConvertZeroDateTime;
+			OldGuids = csb.OldGuids;
+
+			if (!csb.PersistSecurityInfo)
+			{
+				foreach (string key in csb.Keys)
+					foreach (var passwordKey in MySqlConnectionStringOption.Password.Keys)
+						if (string.Equals(key, passwordKey, StringComparison.OrdinalIgnoreCase))
+							csb.Remove(key);
+			}
+			ConnectionString = csb.ConnectionString;
 		}
 
 		private void Clear()
@@ -80,7 +120,6 @@ namespace MySql.Data.MySqlClient
 
 		readonly object m_lock;
 		readonly Queue<MySqlSession> m_sessions;
-		readonly int m_minimumSize;
 		readonly int m_maximumSize;
 	}
 }
