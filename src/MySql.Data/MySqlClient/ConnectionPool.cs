@@ -8,9 +8,11 @@ namespace MySql.Data.MySqlClient
 	{
 		public string ConnectionString { get; }
 
-		public string Server { get; set; }
+		public string DataSource { get; }
 
-		public int Port { get; set; }
+		public string[] Hostnames { get; }
+
+		public int Port { get; }
 
 		public string UserID { get; }
 
@@ -83,7 +85,8 @@ namespace MySql.Data.MySqlClient
 			m_sessions = new Queue<MySqlSession>();
 			m_maximumSize = csb.Pooling ? (int) csb.MaximumPoolSize : 0;
 
-			Server = csb.Server;
+			DataSource = csb.Server;
+			Hostnames = csb.Server.Split(',');
 			Port = (int) csb.Port;
 			UserID = csb.UserID;
 			Password = csb.Password;

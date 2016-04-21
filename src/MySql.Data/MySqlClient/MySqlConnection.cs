@@ -99,7 +99,7 @@ namespace MySql.Data.MySqlClient
 				if (m_session == null)
 				{
 					m_session = new MySqlSession(m_pool);
-					var connected = await m_session.ConnectAsync(m_pool.Server.Split(','), m_pool.Port).ConfigureAwait(false);
+					var connected = await m_session.ConnectAsync(m_pool.Hostnames, m_pool.Port).ConfigureAwait(false);
 					if (!connected)
 					{
 						SetState(ConnectionState.Closed);
@@ -180,7 +180,7 @@ namespace MySql.Data.MySqlClient
 
 		public override ConnectionState State => m_connectionState;
 
-		public override string DataSource => m_pool != null ? m_pool.Server : new MySqlConnectionStringBuilder(m_connectionString).Server;
+		public override string DataSource => m_pool != null ? m_pool.DataSource : new MySqlConnectionStringBuilder(m_connectionString).Server;
 
 		public override string ServerVersion => m_session.ServerVersion.OriginalString;
 
