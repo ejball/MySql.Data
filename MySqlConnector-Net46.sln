@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data-Net46", "src\MySql.Data\MySql.Data-Net46.csproj", "{AB9583F8-DC7E-420F-AC52-0B7F0FCD0C77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql.Data.Tests-Net46", "tests\MySql.Data.Tests\MySql.Data.Tests-Net46.csproj", "{1A02F4F4-EB48-4243-B9BD-9DA242035ACE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB9583F8-DC7E-420F-AC52-0B7F0FCD0C77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB9583F8-DC7E-420F-AC52-0B7F0FCD0C77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB9583F8-DC7E-420F-AC52-0B7F0FCD0C77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB9583F8-DC7E-420F-AC52-0B7F0FCD0C77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A02F4F4-EB48-4243-B9BD-9DA242035ACE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A02F4F4-EB48-4243-B9BD-9DA242035ACE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A02F4F4-EB48-4243-B9BD-9DA242035ACE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A02F4F4-EB48-4243-B9BD-9DA242035ACE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
